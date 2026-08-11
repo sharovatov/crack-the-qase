@@ -53,10 +53,16 @@ footer {
 }
 
 .wordmark {
-  font-size: 1.05rem;
-  font-weight: 760;
-  letter-spacing: -0.04em;
+  display: inline-flex;
+  width: clamp(6.75rem, 13vw, 8.5rem);
+  flex: 0 0 auto;
   text-decoration: none;
+}
+
+.wordmark img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .event-label,
