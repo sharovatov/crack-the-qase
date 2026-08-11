@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Crack the Qase at StarWest — enter the live QA puzzle challenge.">
+    <meta name="theme-color" content="#121611">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Crack the Qase">
+    <meta property="og:description" content="Spot what breaks. Beat the clock. Win wonderfully nerdy prizes.">
+    <meta property="og:url" content="https://crack-the-qase.io/play">
+
+    <link rel="canonical" href="https://crack-the-qase.io/play">
+    <link rel="stylesheet" href="./styles.css">
+
+    <title>Play · Crack the Qase</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="Crack the Qase home">crack-the-qase</a>
+      <p class="event-label">StarWest 2026 · Booth 17</p>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">A live QA puzzle challenge</p>
+          <h1 id="page-title">Spot what breaks.<br><span>Beat the clock.</span></h1>
+          <p class="lede">Short engineering puzzles. Timed drops. Curious hardware. One winner each day.</p>
+        </div>
+
+        <div class="entry-card">
+          <div class="entry-card-heading">
+            <p class="card-kicker">StarWest · Anaheim</p>
+            <h2>Enter the challenge</h2>
+            <p>Leave your details and we’ll tell you exactly where to start.</p>
+          </div>
+
+          <form id="registration-form" novalidate>
+            <div class="field">
+              <label for="full-name">Your name</label>
+              <input id="full-name" name="full_name" type="text" autocomplete="name" maxlength="120" required>
+            </div>
+
+            <div class="field-pair">
+              <div class="field">
+                <label for="company">Company</label>
+                <input id="company" name="company" type="text" autocomplete="organization" maxlength="160" required>
+              </div>
+
+              <div class="field">
+                <label for="role">Role</label>
+                <input id="role" name="role" type="text" autocomplete="organization-title" maxlength="160" required>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required>
+            </div>
+
+            <div class="trap" aria-hidden="true">
+              <label for="website">Website</label>
+              <input id="website" name="website" type="text" autocomplete="off" tabindex="-1">
+            </div>
+
+            <p class="data-note">We’ll use these details to run Crack the Qase and send you updates about this challenge.</p>
+
+            <button class="submit-button" type="submit">
+              <span class="button-label">Count me in</span>
+              <span class="button-arrow" aria-hidden="true">↗</span>
+            </button>
+
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          </form>
+
+          <section class="success-panel" id="success-panel" hidden tabindex="-1">
+            <p class="success-mark" aria-hidden="true">✓</p>
+            <p class="card-kicker">You’re in</p>
+            <h2>Now come find us.</h2>
+            <p>Head to booth 17 to get your first puzzle. Bring your sharpest debugging instincts.</p>
+          </section>
+        </div>
+
+        <ol class="steps" aria-label="How the challenge works">
+          <li>
+            <span class="step-number">01</span>
+            <span>Enter here, then solve the first puzzle at our booth.</span>
+          </li>
+          <li>
+            <span class="step-number">02</span>
+            <span>Fastest correct solvers advance through the day.</span>
+          </li>
+          <li>
+            <span class="step-number">03</span>
+            <span>Stay connected by LoRa or email. Win excellent gear.</span>
+          </li>
+        </ol>
+      </section>
+    </main>
+
+    <footer>
+      <p>Built by <a href="https://qase.io">Qase</a> for people who notice when things are slightly off.</p>
+    </footer>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
