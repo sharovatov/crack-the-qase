@@ -14,11 +14,11 @@ Status: temporary review draft. This file is not an implementation and makes no 
 - [x] Replace the placeholder homepage with an evergreen explanation.
 - [x] Update this repository's README and booth runbook.
 - [x] Pass JavaScript syntax, HTML structure, whitespace, local route, public-flow, and mocked admin workflow checks.
-- [ ] Apply the new migration to the live Supabase project.
+- [x] Apply the new migration to the live Supabase project.
 - [ ] Create and allowlist the real booth-staff Supabase Auth accounts.
 - [ ] Run end-to-end checks against the migrated Supabase project.
 - [ ] Run the physical iOS, Android, and booth-device checks.
-- [ ] Deploy the updated static site after the database migration.
+- [x] Deploy the updated static site.
 
 ## Fixed decisions and boundaries
 
@@ -190,7 +190,7 @@ Do not edit, rewrite, or link this work back into the strategy document.
 - [x] Validate that the form and submitted payload contain name, company, and role without email.
 - [x] Confirm the successful and duplicate code paths redirect to the external puzzle site.
 - [x] Confirm the failed-registration code path remains on the page and shows a useful error.
-- [ ] Confirm a new registration is saved under the active event against the migrated Supabase project.
+- [x] Confirm a new registration is saved under the active event against the migrated Supabase project.
 - [ ] Confirm a duplicate name + company registration reaches the puzzle site without creating a second row against the migrated Supabase project.
 
 ### Security
@@ -224,9 +224,10 @@ Do not edit, rewrite, or link this work back into the strategy document.
 4. [x] Build the authenticated admin page and raffle filter.
 5. [x] Replace the evergreen homepage placeholder.
 6. [x] Update this repository’s README.
-7. [ ] Apply the migration and run live security/workflow checks.
-8. [ ] Run physical-device checks.
-9. [ ] Deploy the migration before deploying frontend code that depends on it.
+7. [x] Apply the live Supabase migration.
+8. [x] Deploy the updated static site.
+9. [ ] Run live security/workflow checks after creating and allowlisting staff accounts.
+10. [ ] Run physical-device checks.
 
 ## Explicitly out of scope
 
