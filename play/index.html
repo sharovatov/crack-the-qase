@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Crack the Qase at StarWest — enter the live QA puzzle challenge.">
+    <meta name="description" content="Crack the Qase at StarWest — solve six QA puzzles and prove your solutions at the Qase booth.">
     <meta name="theme-color" content="#121611">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Crack the Qase">
-    <meta property="og:description" content="Spot what breaks. Beat the clock. Win wonderfully nerdy prizes.">
+    <meta property="og:description" content="Six QA puzzles. Solve them your way, then prove your solutions at the Qase booth.">
     <meta property="og:url" content="https://crack-the-qase.io/play">
 
     <link rel="canonical" href="https://crack-the-qase.io/play">
@@ -21,22 +21,22 @@
       <a class="wordmark" href="/" aria-label="Crack the Qase home">
         <img src="../assets/qase-logo.png" alt="" width="2001" height="607">
       </a>
-      <p class="event-label">StarWest 2026 · Booth 17</p>
+      <p class="event-label" id="event-label">StarWest 2026 · Booth 17</p>
     </header>
 
     <main>
       <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <p class="eyebrow">A live QA puzzle challenge</p>
-          <h1 id="page-title">Spot what breaks.<br><span>Beat the clock.</span></h1>
-          <p class="lede">Short engineering puzzles. Timed drops. Curious hardware. One winner each day.</p>
+          <p class="eyebrow">A self-paced QA puzzle challenge</p>
+          <h1 id="page-title">Solve the puzzles.<br><span>Prove your case.</span></h1>
+          <p class="lede"><span data-puzzle-count>6</span> engineering puzzles, open from the start. Solve them in any order, wherever you like, then show us what you found.</p>
         </div>
 
         <div class="entry-card">
           <div class="entry-card-heading">
-            <p class="card-kicker">StarWest · Anaheim</p>
+            <p class="card-kicker" id="event-kicker">StarWest 2026 · Anaheim</p>
             <h2>Enter the challenge</h2>
-            <p>Leave your details and we’ll tell you exactly where to start.</p>
+            <p>Register once and we’ll take you straight to all <span data-puzzle-count>6</span> puzzles.</p>
           </div>
 
           <form id="registration-form" novalidate>
@@ -45,21 +45,14 @@
               <input id="full-name" name="full_name" type="text" autocomplete="name" maxlength="120" required>
             </div>
 
-            <div class="field-pair">
-              <div class="field">
-                <label for="company">Company</label>
-                <input id="company" name="company" type="text" autocomplete="organization" maxlength="160" required>
-              </div>
-
-              <div class="field">
-                <label for="role">Role</label>
-                <input id="role" name="role" type="text" autocomplete="organization-title" maxlength="160" required>
-              </div>
+            <div class="field">
+              <label for="company">Company</label>
+              <input id="company" name="company" type="text" autocomplete="organization" maxlength="160" required>
             </div>
 
             <div class="field">
-              <label for="email">Email</label>
-              <input id="email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required>
+              <label for="role">Role</label>
+              <input id="role" name="role" type="text" autocomplete="organization-title" maxlength="160" required>
             </div>
 
             <div class="trap" aria-hidden="true">
@@ -67,10 +60,10 @@
               <input id="website" name="website" type="text" autocomplete="off" tabindex="-1">
             </div>
 
-            <p class="data-note">We’ll use these details to run Crack the Qase and send you updates about this challenge.</p>
+            <p class="data-note">We’ll use your name, company, and role to run this challenge and record your progress.</p>
 
             <button class="submit-button" type="submit">
-              <span class="button-label">Count me in</span>
+              <span class="button-label">Open the puzzles</span>
               <span class="button-arrow" aria-hidden="true">↗</span>
             </button>
 
@@ -80,23 +73,27 @@
           <section class="success-panel" id="success-panel" hidden tabindex="-1">
             <p class="success-mark" aria-hidden="true">✓</p>
             <p class="card-kicker">You’re in</p>
-            <h2>Now come find us.</h2>
-            <p>Head to booth 17 to get your first puzzle. Bring your sharpest debugging instincts.</p>
+            <h2>Opening the puzzles…</h2>
+            <p>If nothing happens, <a id="puzzle-site-link" href="https://crack-the-qase.fly.dev">open the puzzles here</a>.</p>
           </section>
         </div>
 
         <ol class="steps" aria-label="How the challenge works">
           <li>
             <span class="step-number">01</span>
-            <span>Enter here, then solve the first puzzle at our booth.</span>
+            <span>Register here and open all <span data-puzzle-count>6</span> puzzles.</span>
           </li>
           <li>
             <span class="step-number">02</span>
-            <span>Fastest correct solvers advance through the day.</span>
+            <span>Solve any puzzle, in any order, at your own pace.</span>
           </li>
           <li>
             <span class="step-number">03</span>
-            <span>Stay connected by LoRa or email. Win excellent gear.</span>
+            <span>Show your solution at <span data-booth-label>booth 17</span>. Your first verified solve earns one die-roll prize.</span>
+          </li>
+          <li>
+            <span class="step-number">04</span>
+            <span>Verify all <span data-puzzle-count>6</span> to join the day-two raffle. You must be present to take part.</span>
           </li>
         </ol>
       </section>
@@ -106,6 +103,7 @@
       <p>Built by <a href="https://qase.io">Qase</a> for people who notice when things are slightly off.</p>
     </footer>
 
+    <script src="../config.js"></script>
     <script src="./app.js" defer></script>
   </body>
 </html>

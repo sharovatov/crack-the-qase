@@ -53,9 +53,50 @@ h1 span {
 }
 
 .intro {
+  max-width: 42rem;
   margin: 2rem 0 0;
   color: #a9a69f;
   font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  margin-top: 2.25rem;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+}
+
+.primary-link,
+.secondary-link {
+  display: inline-flex;
+  min-height: 3rem;
+  padding: 0.75rem 1.1rem;
+  border-radius: 999px;
+  align-items: center;
+  gap: 0.65rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.primary-link {
+  background: #d7ff45;
+  color: #0d0d0d;
+}
+
+.secondary-link {
+  border: 1px solid rgb(244 241 234 / 22%);
+}
+
+.primary-link:hover,
+.primary-link:focus-visible {
+  background: #efffb3;
+}
+
+.secondary-link:hover,
+.secondary-link:focus-visible {
+  border-color: #d7ff45;
+  color: #d7ff45;
 }
 
 .home-link {
