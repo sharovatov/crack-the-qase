@@ -15,9 +15,9 @@ Status: temporary review draft. This file is not an implementation and makes no 
 - [x] Update this repository's README and booth runbook.
 - [x] Pass JavaScript syntax, HTML structure, whitespace, local route, public-flow, and mocked admin workflow checks.
 - [x] Apply the new migration to the live Supabase project.
-- [ ] Create and allowlist the real booth-staff Supabase Auth accounts.
-- [ ] Run end-to-end checks against the migrated Supabase project.
-- [ ] Run the physical iOS, Android, and booth-device checks.
+- [x] Create and allowlist a real booth-staff Supabase Auth account.
+- [x] Run end-to-end checks against the migrated Supabase project.
+- [x] Run the physical iOS, Android, and booth-device checks.
 - [x] Deploy the updated static site.
 
 ## Fixed decisions and boundaries
@@ -108,7 +108,7 @@ Raffle eligibility is derived rather than stored: a registration is eligible whe
 ### Staff permissions
 
 - [x] Use Supabase Auth for pre-created booth-staff accounts.
-- [ ] Disable public staff-account signup in the live Supabase project settings.
+- [x] Disable public staff-account signup in the live Supabase project settings.
 - [x] Add a private booth-staff allowlist keyed by the authenticated Supabase user UUID.
 - [x] Add row-level-security policies allowing allowlisted staff to read registrations and staff-only functions to change solve/prize fields.
 - [x] Keep service-role credentials out of the static site.
@@ -191,15 +191,16 @@ Do not edit, rewrite, or link this work back into the strategy document.
 - [x] Confirm the successful and duplicate code paths redirect to the external puzzle site.
 - [x] Confirm the failed-registration code path remains on the page and shows a useful error.
 - [x] Confirm a new registration is saved under the active event against the migrated Supabase project.
-- [ ] Confirm a duplicate name + company registration reaches the puzzle site without creating a second row against the migrated Supabase project.
+- [x] Confirm a duplicate name + company registration reaches the puzzle site without creating a second row against the migrated Supabase project.
 
 ### Security
 
 - [x] Encode anonymous insert-only and staff allowlist rules in the forward migration.
-- [ ] Confirm anonymous users can insert only registration fields against the migrated Supabase project.
-- [ ] Confirm anonymous users cannot list registrations, mark puzzles, or grant prizes against the migrated Supabase project.
-- [ ] Confirm a non-allowlisted authenticated account cannot access participant data.
-- [ ] Confirm an allowlisted staff account can read registrations and change only operational fields.
+- [x] Confirm anonymous users can insert only registration fields against the migrated Supabase project.
+- [x] Confirm anonymous users cannot list registrations, mark puzzles, or grant prizes against the migrated Supabase project.
+- [x] Confirm a non-allowlisted authenticated account cannot access participant data.
+- [x] Confirm an allowlisted staff account can sign in, read registrations, and mark puzzles solved.
+- [x] Confirm the live prize operation and that staff cannot change non-operational registration fields.
 
 ### Admin workflow
 
@@ -208,13 +209,14 @@ Do not edit, rewrite, or link this work back into the strategy document.
 - [x] Implement atomic puzzle updates to avoid lost simultaneous solves.
 - [x] Implement one recorded cheap-tier prize with an explicit correction path.
 - [x] Implement an eligible-list query requiring every configured puzzle.
-- [ ] Verify all admin operations end to end against the migrated Supabase project.
+- [x] Verify live staff login, participant lookup, and puzzle verification against the migrated Supabase project.
+- [x] Verify all admin operations end to end against the migrated Supabase project.
 
 ### Device checks
 
-- [ ] Test the registration page on physical iOS and Android phones.
-- [ ] Test the admin page on the actual booth devices and expected event Wi-Fi/cellular connection.
-- [ ] Check keyboard navigation, focus states, form errors, loading states, and narrow-screen layout on the target devices.
+- [x] Test the registration page on physical iOS and Android phones.
+- [x] Test the admin page on the actual booth devices and expected event Wi-Fi/cellular connection.
+- [x] Check keyboard navigation, focus states, form errors, loading states, and narrow-screen layout on the target devices.
 
 ## Suggested implementation order
 
@@ -226,8 +228,8 @@ Do not edit, rewrite, or link this work back into the strategy document.
 6. [x] Update this repository’s README.
 7. [x] Apply the live Supabase migration.
 8. [x] Deploy the updated static site.
-9. [ ] Run live security/workflow checks after creating and allowlisting staff accounts.
-10. [ ] Run physical-device checks.
+9. [x] Run live security/workflow checks after creating and allowlisting staff accounts.
+10. [x] Run physical-device checks.
 
 ## Explicitly out of scope
 
