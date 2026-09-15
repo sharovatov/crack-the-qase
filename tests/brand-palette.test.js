@@ -60,3 +60,22 @@ test("homepage and 404 theme-color match the brand black", () => {
     assert.equal(match[1].toLowerCase(), "#0f172a", `${page} theme-color`);
   }
 });
+
+test("homepage primary action uses the accent fill with a brand-purple hover", () => {
+  const css = read("styles.css").replace(/\s+/g, " ");
+  const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const rule = (selector) => {
+    const match = css.match(new RegExp(`(?:^|}) ?${escape(selector)} ?{([^}]*)}`));
+    assert.ok(match, `rule for ${selector} exists`);
+    return match[1];
+  };
+
+  assert.match(rule(".eyebrow"), /color: var\(--accent\)/);
+  assert.match(rule("h1 span"), /color: var\(--accent\)/);
+  assert.match(rule(".primary-link"), /background: var\(--accent\)/);
+  assert.match(rule(".primary-link"), /color: var\(--ink\)/);
+
+  const hover = rule(".primary-link:hover, .primary-link:focus-visible");
+  assert.match(hover, /background: var\(--brand-purple\)/);
+  assert.match(hover, /color: var\(--paper\)/);
+});
