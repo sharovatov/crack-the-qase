@@ -1,9 +1,17 @@
 :root {
   color-scheme: dark;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #0d0d0d;
-  color: #f4f1ea;
+  background: #0f172a;
+  color: #f6f4eb;
   font-synthesis: none;
+  --accent: #c8b0ff;
+  --accent-secondary: #b5d2ff;
+  --brand-purple: #4f46dc;
+  --brand-deep: #1a1636;
+  --ink: #0f172a;
+  --paper: #f6f4eb;
+  --muted: #a8aea1;
+  --line: rgb(246 244 235 / 14%);
 }
 
 * {
@@ -15,8 +23,9 @@ body {
   min-height: 100vh;
   margin: 0;
   background:
-    radial-gradient(circle at 80% 15%, rgb(215 255 69 / 10%), transparent 30rem),
-    #0d0d0d;
+    radial-gradient(circle at 10% 20%, rgb(200 176 255 / 12%), transparent 28rem),
+    radial-gradient(circle at 90% 10%, rgb(181 210 255 / 8%), transparent 24rem),
+    var(--ink);
 }
 
 .shell {
@@ -32,7 +41,7 @@ body {
 
 .eyebrow {
   margin: 0 0 1.5rem;
-  color: #d7ff45;
+  color: var(--accent);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -49,13 +58,13 @@ h1 {
 }
 
 h1 span {
-  color: #d7ff45;
+  color: var(--accent);
 }
 
 .intro {
   max-width: 42rem;
   margin: 2rem 0 0;
-  color: #a9a69f;
+  color: var(--muted);
   font-size: clamp(1rem, 2vw, 1.25rem);
   line-height: 1.6;
 }
@@ -77,38 +86,48 @@ h1 span {
   gap: 0.65rem;
   font-weight: 700;
   text-decoration: none;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
 }
 
 .primary-link {
-  background: #d7ff45;
-  color: #0d0d0d;
+  background: var(--accent);
+  color: var(--ink);
 }
 
 .secondary-link {
-  border: 1px solid rgb(244 241 234 / 22%);
+  border: 1px solid var(--line);
+  color: var(--paper);
 }
 
 .primary-link:hover,
 .primary-link:focus-visible {
-  background: #efffb3;
+  background: var(--brand-purple);
+  color: var(--paper);
 }
 
 .secondary-link:hover,
 .secondary-link:focus-visible {
-  border-color: #d7ff45;
-  color: #d7ff45;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.primary-link:focus-visible,
+.secondary-link:focus-visible,
+.home-link:focus-visible {
+  outline: 3px solid var(--accent-secondary);
+  outline-offset: 3px;
 }
 
 .home-link {
   margin-top: 2.25rem;
-  color: #f4f1ea;
+  color: var(--paper);
   font-weight: 650;
   text-underline-offset: 0.3em;
 }
 
 .home-link:hover,
 .home-link:focus-visible {
-  color: #d7ff45;
+  color: var(--accent);
 }
 
 @media (prefers-reduced-motion: no-preference) {
