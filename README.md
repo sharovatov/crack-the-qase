@@ -35,17 +35,21 @@ Only puzzle identifiers are stored here. Puzzle content and delivery remain on `
 
 The `/play` form writes the participant's name, company, and role directly from the browser to a Supabase `registrations` table. It does not request or submit participant email. Public visitors can insert a registration but cannot read, edit, or delete registrations.
 
-To create the table and its security policy:
+The schema lives in [`supabase/migrations/`](supabase/migrations/) and is applied by Supabase's GitHub integration: every migration pushed to `main` runs against the `crack-the-qase` project automatically. Nothing is pasted into the SQL Editor by hand.
 
-1. Open the `crack-the-qase` project in Supabase.
-2. Open **SQL Editor** and create a new query.
-3. Paste and run [`supabase/migrations/20260811111500_create_registrations.sql`](supabase/migrations/20260811111500_create_registrations.sql).
-4. Paste and run [`supabase/migrations/20260905163000_add_booth_admin.sql`](supabase/migrations/20260905163000_add_booth_admin.sql).
+To change the database:
+
+1. Add a file to `supabase/migrations/` named `YYYYMMDDHHMMSS_short_description.sql`, with a timestamp later than every existing migration.
+2. Wrap the statements in `begin;` / `commit;` and make them safe to re-run (`if not exists`, `on conflict do nothing`, and so on), matching the existing files.
+3. Never edit or delete a migration that has already been pushed. Add a new one instead.
+4. Commit and push to `main`. Supabase picks the file up and applies it; **Database → Migrations** in the dashboard shows what has run.
 5. Open **Table Editor → registrations** to view entries.
 
-The second migration keeps any previously collected email values but makes the column optional and unavailable to new public inserts. It replaces email deduplication with case-insensitive `event_slug + name + company` uniqueness, then adds puzzle progress, prize tracking, staff authorization, and staff-only update functions.
+Current migrations, in order:
 
-If the second migration reports existing duplicate names and companies, resolve those rows deliberately and run it again. The migration will not delete them automatically.
+- [`20260811111500_create_registrations.sql`](supabase/migrations/20260811111500_create_registrations.sql) creates the `registrations` table and its public insert-only policy.
+- [`20260905163000_add_booth_admin.sql`](supabase/migrations/20260905163000_add_booth_admin.sql) keeps any previously collected email values but makes the column optional and unavailable to new public inserts. It replaces email deduplication with case-insensitive `event_slug + name + company` uniqueness, then adds puzzle progress, prize tracking, staff authorization, and staff-only update functions. If it reports existing duplicate names and companies, resolve those rows deliberately; the migration will not delete them automatically.
+- [`20260905170000_allowlist_booth_staff.sql`](supabase/migrations/20260905170000_allowlist_booth_staff.sql) and [`20260916061430_allowlist_second_booth_staff.sql`](supabase/migrations/20260916061430_allowlist_second_booth_staff.sql) allowlist booth operators (see below).
 
 The Supabase project URL and publishable key in `config.js` are intentionally public. Never commit a secret key, service-role key, database password, or staff password.
 
@@ -53,15 +57,27 @@ The Supabase project URL and publishable key in `config.js` are intentionally pu
 
 The admin uses pre-created Supabase Auth accounts. A staff-account email is only a login credential for the admin; it is unrelated to participant registration.
 
-1. In **Supabase → Authentication → Users**, create an account for each booth operator.
+Authentication alone does not grant admin access. The `/admin/` console calls `is_booth_staff()`, which only passes for users whose UUID is in `public.booth_staff`; anyone else is told the account is not allowlisted.
+
+To add a booth operator:
+
+1. In **Supabase → Authentication → Users**, invite the operator or create the account directly. An invite creates the Auth user immediately; the operator sets a password when they accept it.
 2. Keep public Auth signup disabled.
-3. Copy each user's UUID.
-4. In **SQL Editor**, allowlist each UUID:
+3. Copy the user's UUID from the Users list.
+4. Add a migration to `supabase/migrations/` that allowlists the UUID, following the existing allowlist files and the template below.
+5. Commit and push. Once the migration has applied, the operator can sign in at `/admin/`.
 
 ```sql
+begin;
+
 insert into public.booth_staff (user_id)
-values ('00000000-0000-0000-0000-000000000000');
+values ('00000000-0000-0000-0000-000000000000')
+on conflict (user_id) do nothing;
+
+commit;
 ```
+
+To revoke access, push a migration that deletes the row from `public.booth_staff`, or delete the Auth user; the allowlist row is removed with it.
 
 The static `/admin/` page is publicly reachable, but participant data is not. Supabase row-level security only allows an authenticated, allowlisted staff user to read registrations or call the solve/prize functions. The browser never receives a service-role key.
 
