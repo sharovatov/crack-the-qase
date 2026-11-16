@@ -10,19 +10,10 @@ const buttonLabel = submitButton.querySelector(".button-label");
 const formStatus = document.querySelector("#form-status");
 const successPanel = document.querySelector("#success-panel");
 const puzzleSiteLink = document.querySelector("#puzzle-site-link");
-const eventLabel = document.querySelector("#event-label");
-const eventKicker = document.querySelector("#event-kicker");
-
-eventLabel.textContent = `${config.eventName} · ${config.boothLabel}`;
-eventKicker.textContent = `${config.eventName} · ${config.eventLocation}`;
 puzzleSiteLink.href = config.puzzleSiteUrl;
 
 for (const puzzleCount of document.querySelectorAll("[data-puzzle-count]")) {
   puzzleCount.textContent = String(config.puzzles.length);
-}
-
-for (const boothLabel of document.querySelectorAll("[data-booth-label]")) {
-  boothLabel.textContent = config.boothLabel.toLowerCase();
 }
 
 function setSubmitting(isSubmitting) {
