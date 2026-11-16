@@ -59,6 +59,7 @@ test("staff can find a participant, verify a puzzle, and record the first prize"
     full_name: "Ada Lovelace",
     company: "Analytical Engines",
     role: "QA lead",
+    email: "ada@example.com",
     solved_puzzles: [],
     prize_granted: null,
     prize_granted_at: null,
@@ -100,6 +101,7 @@ test("staff can find a participant, verify a puzzle, and record the first prize"
     }
 
     if (url.includes("/rest/v1/registrations")) {
+      assert.ok(new URL(url).searchParams.get("select").split(",").includes("email"));
       return response(200, [{ ...registration }]);
     }
 
@@ -127,6 +129,8 @@ test("staff can find a participant, verify a puzzle, and record the first prize"
   assert.equal(window.document.querySelectorAll(".registration-button").length, 1);
   assert.equal(window.document.querySelectorAll("[data-puzzle-id]").length, 6);
 
+  assert.equal(window.document.querySelector(".participant-email").textContent, "Email: ada@example.com");
+
   const firstPuzzle = window.document.querySelector('[data-puzzle-id="01"]');
   firstPuzzle.checked = true;
   firstPuzzle.dispatchEvent(new window.Event("change", { bubbles: true }));
@@ -140,6 +144,10 @@ test("staff can find a participant, verify a puzzle, and record the first prize"
   assert.equal(window.document.querySelector(".prize-record strong").textContent, "Book");
   assert.equal(registration.solved_puzzles[0], "01");
   assert.equal(registration.prize_granted, "book");
+
+  registration.email = null;
+  window.document.querySelector("#recent-button").click();
+  await waitFor(() => window.document.querySelector(".participant-email").textContent === "Email: Not provided");
 
   dom.window.close();
 });

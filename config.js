@@ -20,7 +20,7 @@
     eventName: "StarWest 2026",
     eventLocation: "Anaheim",
     boothLabel: "Booth 17",
-    noticeVersion: "2026-09-05",
+    noticeVersion: "2026-11-16",
     puzzleSiteUrl: "https://crack-the-qase.fly.dev",
     puzzles: Object.freeze(puzzles),
     cheapPrizes: Object.freeze(cheapPrizes),
