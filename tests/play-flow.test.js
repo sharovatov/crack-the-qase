@@ -72,6 +72,7 @@ function createPlayContext(response) {
     full_name: "Ada Lovelace",
     company: "Analytical Engines",
     role: "QA lead",
+    email: "  ADA@Example.COM  ",
   };
 
   const context = {
@@ -113,7 +114,7 @@ test("active configuration uses the six external puzzle numbers", () => {
   assert.equal(context.window.CRACK_THE_QASE_CONFIG.cheapPrizes.length, 6);
 });
 
-test("successful registration omits email and redirects to the puzzle site", async () => {
+test("successful registration saves normalized email and redirects to the puzzle site", async () => {
   const response = { ok: true, status: 201, json: async () => ({}) };
   const { form, redirects, requests } = createPlayContext(response);
 
@@ -123,12 +124,14 @@ test("successful registration omits email and redirects to the puzzle site", asy
   const body = JSON.parse(requests[0].options.body);
   assert.deepEqual(Object.keys(body).sort(), [
     "company",
+    "email",
     "event_slug",
     "full_name",
     "notice_version",
     "role",
   ]);
-  assert.equal("email" in body, false);
+  assert.equal(body.email, "ada@example.com");
+  assert.equal(body.notice_version, "2026-11-16");
   assert.deepEqual(redirects, ["https://crack-the-qase.fly.dev"]);
 });
 
@@ -138,10 +141,12 @@ test("duplicate name and company also redirects to the puzzle site", async () =>
     status: 409,
     json: async () => ({ code: "23505", message: "duplicate" }),
   };
-  const { form, redirects } = createPlayContext(response);
+  const { form, redirects, requests } = createPlayContext(response);
 
   await form.dispatch("submit");
 
+  assert.equal(requests.length, 1);
+  assert.equal(requests[0].options.method, "POST");
   assert.deepEqual(redirects, ["https://crack-the-qase.fly.dev"]);
 });
 
@@ -151,10 +156,12 @@ test("failed registration stays on the page and shows an error", async () => {
     status: 500,
     json: async () => ({ message: "database unavailable" }),
   };
-  const { form, formStatus, redirects } = createPlayContext(response);
+  const { form, formStatus, redirects, requests } = createPlayContext(response);
 
   await form.dispatch("submit");
 
+  assert.equal(requests.length, 1);
+  assert.equal(requests[0].options.method, "POST");
   assert.deepEqual(redirects, []);
   assert.match(formStatus.textContent, /couldn’t save/i);
 });

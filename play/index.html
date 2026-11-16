@@ -55,12 +55,17 @@
               <input id="role" name="role" type="text" autocomplete="organization-title" maxlength="160" required>
             </div>
 
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" maxlength="254" pattern="[^\s@]+@[^\s@]+\.[^\s@]+" required>
+            </div>
+
             <div class="trap" aria-hidden="true">
               <label for="website">Website</label>
               <input id="website" name="website" type="text" autocomplete="off" tabindex="-1">
             </div>
 
-            <p class="data-note">We’ll use your name, company, and role to run this challenge and record your progress.</p>
+            <p class="data-note">We’ll use your name, company, role, and email to run this challenge and record your progress. Booth staff can view these details. We won’t send you emails through this system.</p>
 
             <button class="submit-button" type="submit">
               <span class="button-label">Open the puzzles</span>

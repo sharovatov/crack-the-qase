@@ -12,6 +12,7 @@ const REGISTRATION_FIELDS = [
   "full_name",
   "company",
   "role",
+  "email",
   "solved_puzzles",
   "prize_granted",
   "prize_granted_at",
@@ -333,7 +334,10 @@ function renderDetail() {
   const meta = document.createElement("p");
   meta.className = "participant-meta";
   meta.textContent = `${registration.company} · ${registration.role}`;
-  headingCopy.append(name, meta);
+  const email = document.createElement("p");
+  email.className = "participant-meta participant-email";
+  email.textContent = `Email: ${registration.email || "Not provided"}`;
+  headingCopy.append(name, meta, email);
   const progress = document.createElement("span");
   progress.className = "progress-large";
   progress.textContent = `${solved.length} of ${config.puzzles.length} verified`;

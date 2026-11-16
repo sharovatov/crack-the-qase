@@ -69,6 +69,7 @@ form.addEventListener("submit", async (event) => {
     full_name: formData.get("full_name").trim(),
     company: formData.get("company").trim(),
     role: formData.get("role").trim(),
+    email: formData.get("email").trim().toLowerCase(),
     notice_version: config.noticeVersion,
   };
 

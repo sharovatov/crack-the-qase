@@ -10,10 +10,12 @@ function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), "utf8");
 }
 
-test("participant form has no email field or timed-tournament copy", () => {
+test("participant form requires email and explains its use", () => {
   const html = read("play/index.html");
 
-  assert.doesNotMatch(html, /name="email"/i);
+  assert.match(html, /name="email"[^>]*type="email"[^>]*required/i);
+  assert.match(html, /Booth staff can view these details/);
+  assert.match(html, /won’t send you emails/);
   assert.doesNotMatch(html, /timed drops|fastest correct|one winner each day|LoRa|beat the clock/i);
   assert.match(html, /first verified solve/i);
   assert.match(html, /raffle/i);

@@ -20,6 +20,15 @@ Run the dependency-free repository checks with:
 node --test
 ```
 
+Browser-flow checks use `jsdom` when available. The email database check uses an optional embedded PostgreSQL engine; to run the full suite without adding application dependencies:
+
+```sh
+npm install --prefix /tmp/ctq-test-deps jsdom @electric-sql/pglite
+NODE_PATH=/tmp/ctq-test-deps/node_modules node --test
+```
+
+Without these optional dependencies, their checks are reported as skipped.
+
 ## Active event configuration
 
 Public, non-secret event settings live in [`config.js`](config.js):
@@ -33,7 +42,7 @@ Only puzzle identifiers are stored here. Puzzle content and delivery remain on `
 
 ## Registration database
 
-The `/play` form writes the participant's name, company, and role directly from the browser to a Supabase `registrations` table. It does not request or submit participant email. Public visitors can insert a registration but cannot read, edit, or delete registrations.
+The `/play` form requires the participant's name, company, role, and email and writes them directly from the browser to a Supabase `registrations` table. Email is trimmed and lowercased, visible in the allowlisted staff detail view, and is not used to send emails through this system. Historical entries without email display ‘Not provided’. Identity remains event + case-insensitive name + company; repeat registration redirects without updating the existing row or its email. Public visitors can insert a registration but cannot read, edit, or delete registrations.
 
 The schema lives in [`supabase/migrations/`](supabase/migrations/) and is applied by Supabase's GitHub integration: every migration pushed to `main` runs against the `crack-the-qase` project automatically. Nothing is pasted into the SQL Editor by hand.
 
@@ -52,6 +61,10 @@ Current migrations, in order:
 - [`20260905170000_allowlist_booth_staff.sql`](supabase/migrations/20260905170000_allowlist_booth_staff.sql) and [`20260916061430_allowlist_second_booth_staff.sql`](supabase/migrations/20260916061430_allowlist_second_booth_staff.sql) allowlist booth operators (see below).
 
 The Supabase project URL and publishable key in `config.js` are intentionally public. Never commit a secret key, service-role key, database password, or staff password.
+
+The email migration [`20261116110000_require_participant_email.sql`](supabase/migrations/20261116110000_require_participant_email.sql) grants public email inserts and staff email reads, and requires email plus notice version `2026-11-16` on new public inserts. Existing email format validation and staff row-level security remain in force; old rows with null email remain editable by staff.
+
+For this release, ensure the email migration has applied before using the updated form and admin. The migration contains all Supabase changes; no dashboard settings or manual SQL are needed with the configured GitHub integration. The database and GitHub Pages deploy independently: registration can temporarily fail between deployments, because the old form sends the old notice version and the new form needs the new email permission. Deploy during a quiet period and verify both deployments before reopening registration. If applying manually, run the complete new migration in Supabase SQL Editor before deploying the frontend.
 
 ## Booth-staff access
 

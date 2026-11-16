@@ -650,3 +650,7 @@ input:disabled {
     border-radius: 1rem;
   }
 }
+
+.participant-email {
+  overflow-wrap: anywhere;
+}
