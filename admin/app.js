@@ -458,6 +458,8 @@ async function loadRegistrations({ view = activeView, query = "" } = {}) {
   const params = new URLSearchParams({
     select: REGISTRATION_FIELDS,
     event_slug: `eq.${config.eventSlug}`,
+    // Include September 25 in Anaheim (PDT); hide later registrations.
+    created_at: "lt.2026-09-26T00:00:00-07:00",
     order: "created_at.desc",
     limit: "100",
   });
