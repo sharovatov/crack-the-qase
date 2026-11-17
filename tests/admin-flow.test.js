@@ -54,7 +54,7 @@ test("staff can find a participant, verify a puzzle, and record the first prize"
   }
   let registration = {
     id: "00000000-0000-0000-0000-000000000001",
-    created_at: "2026-09-05T12:00:00Z",
+    created_at: "2026-09-25T12:00:00Z",
     event_slug: "starwest-2026",
     full_name: "Ada Lovelace",
     company: "Analytical Engines",
@@ -63,7 +63,7 @@ test("staff can find a participant, verify a puzzle, and record the first prize"
     solved_puzzles: [],
     prize_granted: null,
     prize_granted_at: null,
-    updated_at: "2026-09-05T12:00:00Z",
+    updated_at: "2026-09-25T12:00:00Z",
   };
 
   window.confirm = () => true;
@@ -95,13 +95,14 @@ test("staff can find a participant, verify a puzzle, and record the first prize"
       registration = {
         ...registration,
         prize_granted: body.prize_identifier,
-        prize_granted_at: "2026-09-05T12:05:00Z",
+        prize_granted_at: "2026-09-25T12:05:00Z",
       };
       return response(204);
     }
 
     if (url.includes("/rest/v1/registrations")) {
       assert.ok(new URL(url).searchParams.get("select").split(",").includes("email"));
+      assert.equal(new URL(url).searchParams.get("created_at"), "gte.2026-09-25T00:00:00-07:00");
       return response(200, [{ ...registration }]);
     }
 
@@ -150,4 +151,87 @@ test("staff can find a participant, verify a puzzle, and record the first prize"
   await waitFor(() => window.document.querySelector(".participant-email").textContent === "Email: Not provided");
 
   dom.window.close();
+});
+
+test("admin lists, counts, search, raffle, and detail reloads exclude registrations before September 25", {
+  skip: JSDOM ? false : "jsdom is not available in this environment",
+}, async (t) => {
+  const dom = new JSDOM(read("admin/index.html"), {
+    runScripts: "outside-only",
+    url: "http://localhost:8000/admin/",
+  });
+  t.after(() => dom.window.close());
+  const { window } = dom;
+  const rows = [
+    { id: "old", full_name: "Older Participant", created_at: "2026-09-25T06:59:59.999Z" },
+    { id: "boundary", full_name: "Midnight Participant", created_at: "2026-09-25T07:00:00Z" },
+    { id: "new", full_name: "Newer Participant", created_at: "2026-11-17T12:00:00Z" },
+  ].map((row) => ({
+    ...row,
+    event_slug: "starwest-2026",
+    company: "Example",
+    role: "Tester",
+    solved_puzzles: ["01", "02", "03", "04", "05", "06"],
+    prize_granted: null,
+  }));
+  const requests = [];
+  window.fetch = async (url) => {
+    const { pathname, searchParams: params } = new URL(url);
+    assert.equal(pathname, "/rest/v1/registrations");
+    requests.push(params);
+    let matches = [...rows];
+    const dateFilter = params.get("created_at");
+    if (dateFilter) {
+      const separator = dateFilter.indexOf(".");
+      const operator = dateFilter.slice(0, separator);
+      const cutoff = Date.parse(dateFilter.slice(separator + 1));
+      assert.ok(["gte", "lt"].includes(operator));
+      matches = matches.filter((row) => operator === "gte"
+        ? Date.parse(row.created_at) >= cutoff
+        : Date.parse(row.created_at) < cutoff);
+    }
+    if (params.has("id")) {
+      matches = matches.filter((row) => `eq.${row.id}` === params.get("id"));
+    }
+    if (params.has("or")) {
+      const term = params.get("or").match(/ilike\.\*([^*]+)\*/)[1].toLowerCase();
+      matches = matches.filter((row) => `${row.full_name} ${row.company}`.toLowerCase().includes(term));
+    }
+    if (params.has("solved_puzzles")) {
+      matches = matches.filter((row) => row.solved_puzzles.length === 6);
+    }
+    return response(200, matches);
+  };
+
+  window.eval(read("config.js"));
+  window.eval(read("admin/app.js"));
+  window.eval('storeSession({ access_token: "test-token", expires_in: 3600 })');
+
+  function expectVisible(ids) {
+    assert.deepEqual(
+      [...window.document.querySelectorAll(".registration-button")].map((button) => button.dataset.registrationId),
+      ids,
+    );
+    assert.equal(window.document.querySelector("#registration-count").textContent, String(ids.length));
+    assert.doesNotMatch(window.document.querySelector("#detail-panel").textContent, /Older Participant/);
+  }
+
+  await window.eval('loadRegistrations({ view: "recent" })');
+  expectVisible(["boundary", "new"]);
+  assert.match(window.document.querySelector("#detail-panel").textContent, /Midnight Participant/);
+
+  await window.eval("reloadSelectedRegistration()");
+  expectVisible(["boundary", "new"]);
+  assert.equal(requests.at(-1).get("id"), "eq.boundary");
+  assert.equal(requests.at(-1).get("created_at"), "gte.2026-09-25T00:00:00-07:00");
+
+  await window.eval('loadRegistrations({ view: "recent", query: "Participant" })');
+  expectVisible(["boundary", "new"]);
+  await window.eval('loadRegistrations({ view: "recent", query: "Older" })');
+  expectVisible([]);
+  assert.match(window.document.querySelector("#detail-panel").textContent, /Select a participant/);
+
+  await window.eval('loadRegistrations({ view: "raffle" })');
+  expectVisible(["boundary", "new"]);
+  assert.ok(requests.at(-1).has("solved_puzzles"));
 });

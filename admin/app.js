@@ -5,6 +5,8 @@ if (!config) {
 }
 
 const SESSION_KEY = "crack-the-qase-staff-session";
+// Hide registrations before September 25 in Anaheim (PDT).
+const REGISTRATION_DATE_FILTER = "gte.2026-09-25T00:00:00-07:00";
 const REGISTRATION_FIELDS = [
   "id",
   "created_at",
@@ -458,8 +460,7 @@ async function loadRegistrations({ view = activeView, query = "" } = {}) {
   const params = new URLSearchParams({
     select: REGISTRATION_FIELDS,
     event_slug: `eq.${config.eventSlug}`,
-    // Hide registrations through September 25 in Anaheim (PDT).
-    created_at: "gte.2026-09-26T00:00:00-07:00",
+    created_at: REGISTRATION_DATE_FILTER,
     order: "created_at.desc",
     limit: "100",
   });
@@ -506,6 +507,7 @@ async function reloadSelectedRegistration() {
   const params = new URLSearchParams({
     select: REGISTRATION_FIELDS,
     id: `eq.${selectedRegistrationId}`,
+    created_at: REGISTRATION_DATE_FILTER,
     limit: "1",
   });
   const [updatedRegistration] = await staffRequest(`/rest/v1/registrations?${params.toString()}`);
